@@ -1,0 +1,9 @@
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+File sd_d open successful.
+Finished reading file sd_d, will close now.
+--------START FOR GENE 25 -----------
+ Values arranged as error, n_ka, gene ids for ka, n_kd, gene ids for kd,
+ r0, d, ea, ka_values, kd_values for each subnet. 

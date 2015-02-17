@@ -1,0 +1,87 @@
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+Copied nka and nkd files perfectly
+Number of subnets found is: 3
+Value of sum_act is: 14
+Value of kaval size is: 14
+Copied nka and kaval files perfectly
+Copied nkd and kdval files perfectly
+Value of nka is: 
+8
+3
+3
+Value of kavec is: 
+839
+902
+592
+358
+532
+267
+203
+364
+81
+396
+222
+739
+46
+310
+Value of kaval is: 
+0.5299
+0.683865
+3.41747
+24.452
+3.86305
+4.44291
+0.50749
+5.02474
+3.99035
+15.87
+77.2315
+55.5305
+65.9645
+11.5949
+------------ Starting ODE solver -------------
+               0                  1
+               1        0.040435429
+               2        0.029293414
+               3        0.044978611
+               4        0.047476116
+               5        0.033989166
+               6        0.015692955
+               7       0.0061308478
+               8       0.0024501425
+               9       0.0010433254
+              10      0.00047837872
+              11       0.0002392255
+Value of error for the first run of ODE is: 0.32443664
+------------ Starting ODE solver -------------
+               0                  1
+               1         0.84661707
+               2          1.1270382
+               3           1.216559
+               4          1.2302793
+               5          1.2297425
+               6          1.2008428
+               7          1.0478523
+               8         0.57782416
+               9         0.16241082
+              10        0.037986382
+              11        0.011106479
+Value of error for the first run of ODE is: 25.154866
+------------ Starting ODE solver -------------
+               0                  1
+               1         0.55048223
+               2         0.32026183
+               3         0.32474686
+               4         0.40365488
+               5          0.3455305
+               6         0.19738518
+               7          0.1205156
+               8        0.085558211
+               9        0.068721207
+              10         0.06006195
+              11        0.055371873
+Value of error for the first run of ODE is: 1.0123799
+----------Time taken for the process is:                  0 -----------

@@ -1,0 +1,43 @@
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+               1          1.3846727
+               1          1.3846727
+               2          1.6716007
+               3          1.5770251
+               4          1.1828707
+               5         0.78340164
+               6         0.51671253
+               7         0.36015372
+               8         0.27472617
+               9         0.22863869
+              10         0.20459791
+              11          0.1924317
+Value of error for the first run of ODE is: 0.0018120522
+               1          1.2915304
+               1          1.2915304
+               2          1.7020584
+               3          1.7022858
+               4          1.2743558
+               5         0.83339252
+               6         0.52134074
+               7         0.34028256
+               8         0.24336976
+               9         0.19128236
+              10           0.163935
+              11         0.14942015
+Value of error for the first run of ODE is: 0.0028879004
+               1          1.4566148
+               1          1.4566148
+               2          1.6813757
+               3          1.6523153
+               4            1.21783
+               5         0.77051586
+               6         0.51700526
+               7         0.37938245
+               8         0.30471882
+               9         0.26422597
+              10         0.24244318
+              11         0.23074039
+Value of error for the first run of ODE is: 0.0023242624

@@ -1,0 +1,94 @@
+------------ START FOR ACTIVATORS --------------
+  1     0
+  2     0
+  3     0
+  4     0
+  5     0
+  6     0
+  7     0
+  8     0
+  9     0
+ 10     0
+-------------- END FOR ACTIVATORS --------------
+  1     0
+  2     0
+  3     0
+  4     0
+  5     0
+  6     0
+  7     0
+  8     0
+  9     0
+ 10     0
+------------ Size of subnetworks START----------- 
+  0     0
+  1     0
+  2     0
+  3     0
+  4     0
+  5     0
+  6     0
+  7     0
+  8     0
+  9     0
+ 10     0
+ 11     0
+ 12     0
+ 13     0
+ 14     0
+ 15     0
+ 16     0
+ 17     0
+ 18     0
+ 19     0
+------------ Size of subnetworks END----------- 
+------------ Time taken for simulation for gene 4  is:              17.51 --------------
+------------ Number of acceptable subnetworks for gene 4 is: 0 --------------
+------------ Number of attempts for gene 4 is: 3200 --------------
+------------ START FOR ACTIVATORS --------------
+  1    15
+  2    12
+  3    18
+  4     0
+  5     7
+  6    16
+  7     8
+  8     4
+  9    12
+ 10    17
+-------------- END FOR ACTIVATORS --------------
+  1    15
+  2    11
+  3     0
+  4     0
+  5    57
+  6    19
+  7    22
+  8     0
+  9    49
+ 10    17
+------------ Size of subnetworks START----------- 
+  0     0
+  1    25
+  2    21
+  3    22
+  4    18
+  5     9
+  6     7
+  7     1
+  8     0
+  9     0
+ 10     0
+ 11     0
+ 12     0
+ 13     0
+ 14     0
+ 15     0
+ 16     0
+ 17     0
+ 18     0
+ 19     0
+------------ Size of subnetworks END----------- 
+------------ Time taken for simulation for gene 4  is:                9.5 --------------
+------------ Number of acceptable subnetworks for gene 4 is: 103 --------------
+------------ Number of attempts for gene 4 is: 1600 --------------

@@ -1,0 +1,13 @@
+----Starting simulation----
+----Reading in data----
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+----Setting up spline co-efficients----
+----END spline setup----
+------------ Start for gene 4  ------
+------------ Attempt number 0  ------
+File open successful!
+------------ Time taken for simulation for gene 4  is:                9.5 --------------
+------------ End for gene 4  ------

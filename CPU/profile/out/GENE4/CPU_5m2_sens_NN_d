@@ -1,0 +1,28 @@
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+------------ START FOR ACTIVATORS --------------
+  1   194
+  2   283
+  3   292
+  4     0
+  5   243
+  6   159
+  7   233
+  8   389
+  9   205
+ 10   163
+-------------- END FOR ACTIVATORS --------------
+  1    51
+  2    86
+  3    78
+  4     0
+  5   109
+  6    49
+  7    96
+  8     5
+  9    76
+ 10    36
+----------Number of Acceptable Subnets found: 500 -----------
+----------END FOR GENE 4 -----------

@@ -1,0 +1,57 @@
+----Starting simulation----
+----Reading in data----
+File open successful. It contains: 
+Finished reading file, will close now.
+File x_dt open successful.
+Finished reading file x_dt, will close now.
+----Setting up spline co-efficients----
+----END spline setup----
+------------ Start for gene 645  ------
+------------ Attempt number 0  ------
+-------- Acceptable subnet number: 1  ------------
+-------- Size of subnetwork: 18  ------------
+-------- Value of error is : 0.00450811  ------------
+-------- Number of attempts made till now: 1  ------------
+-------- Acceptable subnet number: 2  ------------
+-------- Size of subnetwork: 8  ------------
+-------- Value of error is : 0.00340761  ------------
+-------- Number of attempts made till now: 1  ------------
+------------ Attempt number 1  ------
+-------- Acceptable subnet number: 3  ------------
+-------- Size of subnetwork: 6  ------------
+-------- Value of error is : 0.00343461  ------------
+-------- Number of attempts made till now: 2  ------------
+------------ Attempt number 2  ------
+-------- Acceptable subnet number: 4  ------------
+-------- Size of subnetwork: 3  ------------
+-------- Value of error is : 0.00424384  ------------
+-------- Number of attempts made till now: 3  ------------
+-------- Acceptable subnet number: 5  ------------
+-------- Size of subnetwork: 8  ------------
+-------- Value of error is : 0.0040496  ------------
+-------- Number of attempts made till now: 3  ------------
+-------- Acceptable subnet number: 6  ------------
+-------- Size of subnetwork: 11  ------------
+-------- Value of error is : 0.000688379  ------------
+-------- Number of attempts made till now: 3  ------------
+-------- Acceptable subnet number: 7  ------------
+-------- Size of subnetwork: 5  ------------
+-------- Value of error is : 0.00268269  ------------
+-------- Number of attempts made till now: 3  ------------
+------------ Attempt number 3  ------
+-------- Acceptable subnet number: 8  ------------
+-------- Size of subnetwork: 5  ------------
+-------- Value of error is : 0.00485892  ------------
+-------- Number of attempts made till now: 4  ------------
+------------ Attempt number 4  ------
+-------- Acceptable subnet number: 9  ------------
+-------- Size of subnetwork: 5  ------------
+-------- Value of error is : 0.00497492  ------------
+-------- Number of attempts made till now: 5  ------------
+-------- Acceptable subnet number: 10  ------------
+-------- Size of subnetwork: 19  ------------
+-------- Value of error is : 0.00487883  ------------
+-------- Number of attempts made till now: 5  ------------
+File open successful!
+------------ Time taken for simulation for gene 645  is:                  0 --------------
+------------ End for gene 645  ------
