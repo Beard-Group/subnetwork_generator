@@ -5,6 +5,7 @@
 #include "./lsoda/cuLsoda.hpp"
 #include "./opt/opt.hpp"
 
+#include <sstream>
 using namespace std;
 //
 int main(void)    
@@ -44,114 +45,24 @@ int main(void)
       const int gene_ind = id_gene;
       vector <double> act_vec, inh_vec;
       vector <int> subnet_size;
-      bool r0_out = false;
-      bool ea_out = false;
-      bool d_out = false;
-      bool nka_out = false;
-      bool nkd_out = false;
-      bool kavec_out = false;
-      bool kdvec_out = false;
-      bool kaval_out = false;
-      bool kdval_out = false;
-      char r0_out_file[32] = ".r0";
-      char ea_out_file[32] = ".ea";
-      char d_out_file[32] = ".d";
-      char nka_out_file[32] = ".nka";
-      char nkd_out_file[32] = ".nkd";
-      char kavec_out_file[32] = ".kavec";
-      char kdvec_out_file[32] = ".kdvec";
-      char kaval_out_file[32] = ".kaval";
-      char kdval_out_file[32] = ".kdval";
-      char r0_index_string[64];
-      char r0_out_path[96] = "../out/N1000/";
-      char ea_index_string[64];
-      char ea_out_path[96] = "../out/N1000/";
-      char d_index_string[64];
-      char d_out_path[96] = "../out/N1000/";
-      char nka_index_string[64];
-      char nka_out_path[96] = "../out/N1000/";
-      char nkd_index_string[64];
-      char nkd_out_path[96] = "../out/N1000/";
-      char kavec_index_string[64];
-      char kavec_out_path[96] = "../out/N1000/";
-      char kdvec_index_string[64];
-      char kdvec_out_path[96] = "../out/N1000/";
-      char kaval_index_string[64];
-      char kaval_out_path[96] = "../out/N1000/";
-      char kdval_index_string[64];
-      char kdval_out_path[96] = "../out/N1000/";
-      if (!r0_out)
-      {
-         r0_out = true;
-         sprintf(r0_index_string, "%d", gene_ind+1);
-         strcat(r0_index_string,r0_out_file);
-         strcat(r0_out_path,r0_index_string);
+      string output_path("../out/N1000/");
+      bool created_paths = false;
+      vector<string> out_files;
+      if (!created_paths) {
+	created_paths = true;
+	stringstream ss;
+	ss << (gene_ind + 1);
+	string file_prefix = output_path + ss.str();
+	out_files.push_back(file_prefix + ".r0");
+	out_files.push_back(file_prefix + ".ea");
+	out_files.push_back(file_prefix + ".d");
+	out_files.push_back(file_prefix + ".nka");
+	out_files.push_back(file_prefix + ".nkd");
+	out_files.push_back(file_prefix + ".kavec");
+	out_files.push_back(file_prefix + ".kdvec");
+	out_files.push_back(file_prefix + ".kaval");
+	out_files.push_back(file_prefix + ".kdval");
       }
-      string out_r0(r0_out_path);
-      if (!ea_out)
-      {
-         ea_out = true;
-         sprintf(ea_index_string, "%d", gene_ind+1);
-         strcat(ea_index_string,ea_out_file);
-         strcat(ea_out_path,ea_index_string);
-      }
-      string out_ea(ea_out_path);
-      if (!d_out)
-      {
-         d_out = true;
-         sprintf(d_index_string, "%d", gene_ind+1);
-         strcat(d_index_string,d_out_file);
-         strcat(d_out_path,d_index_string);
-      }
-      string out_d(d_out_path);
-      if (!nka_out)
-      {
-         nka_out = true;
-         sprintf(nka_index_string, "%d", gene_ind+1);
-         strcat(nka_index_string,nka_out_file);
-         strcat(nka_out_path,nka_index_string);
-      }
-      string out_nka(nka_out_path);
-      if (!nkd_out)
-      {
-         nkd_out = true;
-         sprintf(nkd_index_string, "%d", gene_ind+1);
-         strcat(nkd_index_string,nkd_out_file);
-         strcat(nkd_out_path,nkd_index_string);
-      }
-      string out_nkd(nkd_out_path);
-      if (!kavec_out)
-      {
-         kavec_out = true;
-         sprintf(kavec_index_string, "%d", gene_ind+1);
-         strcat(kavec_index_string,kavec_out_file);
-         strcat(kavec_out_path,kavec_index_string);
-      }
-      string out_kavec(kavec_out_path);
-      if (!kdvec_out)
-      {
-         kdvec_out = true;
-         sprintf(kdvec_index_string, "%d", gene_ind+1);
-         strcat(kdvec_index_string,kdvec_out_file);
-         strcat(kdvec_out_path,kdvec_index_string);
-      }
-      string out_kdvec(kdvec_out_path);
-      if (!kaval_out)
-      {
-         kaval_out = true;
-         sprintf(kaval_index_string, "%d", gene_ind+1);
-         strcat(kaval_index_string,kaval_out_file);
-         strcat(kaval_out_path,kaval_index_string);
-      }
-      string out_kaval(kaval_out_path);
-      if (!kdval_out)
-      {
-         kdval_out = true;
-         sprintf(kdval_index_string, "%d", gene_ind+1);
-         strcat(kdval_index_string,kdval_out_file);
-         strcat(kdval_out_path,kdval_index_string);
-      }
-      string out_kdval(kdval_out_path);
       // END DECLARATIONS 
       int acc_subnet = 0;
       int subnet_att = 0;
@@ -290,7 +201,8 @@ int main(void)
                     double r0_ = r0_mc[ind];
                     double ea_ = ea_mc[ind];
                     double d_ = d_mc[ind];
-                    output_data ( gene_ind, r0_, ea_, d_, out_r0, out_ea, out_d, start_ka, end_ka, start_kd, end_kd, temp_ka_vec, temp_kd_vec, ka_val_h, kd_val_h, out_nka, out_nkd, out_kavec, out_kdvec, out_kaval, out_kdval);
+		    //                    output_data ( gene_ind, r0_, ea_, d_, out_r0, out_ea, out_d, start_ka, end_ka, start_kd, end_kd, temp_ka_vec, temp_kd_vec, ka_val_h, kd_val_h, out_nka, out_nkd, out_kavec, out_kdvec, out_kaval, out_kdval);
+		    output_data(gene_ind, r0_, ea_, d_, start_ka, end_ka, start_kd, end_kd, temp_ka_vec, temp_kd_vec, ka_val_h, kd_val_h, out_files);
                     for ( int k = *(ka_start+ind); k < (*(ka_start+ind)+*(n_ka+ind)); k++) 
                     {
                        if ( ka_val_h[k] > 0.05 ) 

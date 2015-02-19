@@ -41,85 +41,101 @@ void read_data ( const int N_time_points, const int N_gene, vector<double> &t_d,
    else
         cout << "open() failed" << endl;
 }
-void output_data ( const int gene_ind, const double r0_, const double ea_, const double d_, const string out_r0, const string out_ea, const string out_d, const int start_ka, const int end_ka, const int start_kd, const int end_kd, const vector <int> kavec, const vector <int> kdvec, const host_type &kaval, const host_type &kdval, const string out_nka, const string out_nkd, const string kavec_out_path, const string kdvec_out_path, const string kaval_out_path, const string kdval_out_path)
+
+void output_data ( const int gene_ind, const double r0_, const double ea_, const double d_, const int start_ka, const int end_ka, const int start_kd, const int end_kd, const vector <int> kavec, const vector <int> kdvec, const host_type &kaval, const host_type &kdval, const vector<string>& out_paths)
 {
    // Output r0 
-   const char *r0_out = out_r0.c_str();
-   ofstream r0_fileout;
-   r0_fileout.open( r0_out, ios_base::binary|ios_base::app|ios_base::out );
-   if (r0_fileout.is_open())
-          r0_fileout << setw(20) << setprecision(12) << r0_ << endl; 
-   else cout << " open() r0_fileout failed" << endl;
+   ofstream r0_fileout( out_paths[0].c_str(), ios_base::binary|ios_base::app|ios_base::out );
+   if (r0_fileout.is_open()) {
+     r0_fileout << setw(20) << setprecision(12) << r0_ << endl; 
+     r0_fileout.close();
+   }
+   else
+     cout << " open() r0_fileout failed" << endl;
+
+
    // Output ea 
-   const char *ea_out = out_ea.c_str();
-   ofstream ea_fileout;
-   ea_fileout.open( ea_out, ios_base::binary|ios_base::app|ios_base::out );
-   if (ea_fileout.is_open())
-          ea_fileout << setw(20) << setprecision(12) << ea_ << endl; 
-   else cout << " open() ea_fileout failed" << endl;
+   ofstream ea_fileout( out_paths[1].c_str(), ios_base::binary|ios_base::app|ios_base::out );
+   if (ea_fileout.is_open()) {
+     ea_fileout << setw(20) << setprecision(12) << ea_ << endl; 
+     ea_fileout.close();
+   }
+   else
+     cout << " open() ea_fileout failed" << endl;
+
+
    // Output d 
-   const char *d_out = out_d.c_str();
-   ofstream d_fileout;
-   d_fileout.open( d_out, ios_base::binary|ios_base::app|ios_base::out );
-   if (d_fileout.is_open())
-          d_fileout << setw(20) << setprecision(12) << d_ << endl; 
-   else cout << " open() d_fileout failed" << endl;
+   ofstream d_fileout( out_paths[2].c_str(), ios_base::binary|ios_base::app|ios_base::out );
+   if (d_fileout.is_open()) {
+     d_fileout << setw(20) << setprecision(12) << d_ << endl; 
+     d_fileout.close();
+   }
+   else
+     cout << " open() d_fileout failed" << endl;
+
+
    // Output nka 
-   const char *nka_out = out_nka.c_str();
-   ofstream nka_fileout;
-   nka_fileout.open( nka_out, ios_base::binary|ios_base::app|ios_base::out );
-   if (nka_fileout.is_open())
-          nka_fileout << setw(3) << (end_ka-start_ka) << endl; 
-   else cout << " open() nka_fileout failed" << endl;
+   ofstream nka_fileout( out_paths[3].c_str(), ios_base::binary|ios_base::app|ios_base::out );
+   if (nka_fileout.is_open()) {
+     nka_fileout << setw(3) << (end_ka-start_ka) << endl; 
+     nka_fileout.close();
+   }
+   else
+     cout << " open() nka_fileout failed" << endl;
+
+
    // Output nkd 
-   const char *nkd_out = out_nkd.c_str();
-   ofstream nkd_fileout;
-   nkd_fileout.open( nkd_out, ios_base::binary|ios_base::app|ios_base::out );
-   if (nkd_fileout.is_open())
-          nkd_fileout << setw(3) << (end_kd-start_kd) << endl; 
-   else cout << " open() nkd_fileout failed" << endl;
+   ofstream nkd_fileout( out_paths[4].c_str(), ios_base::binary|ios_base::app|ios_base::out );
+   if (nkd_fileout.is_open()) {
+     nkd_fileout << setw(3) << (end_kd-start_kd) << endl; 
+     nkd_fileout.close();
+   }
+   else
+     cout << " open() nkd_fileout failed" << endl;
+
+
    // Output ka vec
-   const char *kavec_out = kavec_out_path.c_str();
-   ofstream kavec_fileout;
-   kavec_fileout.open( kavec_out, ios_base::binary|ios_base::app|ios_base::out );
+   ofstream kavec_fileout( out_paths[5].c_str(), ios_base::binary|ios_base::app|ios_base::out );
    if (kavec_fileout.is_open())
    {
       for ( int ind = start_ka; ind < end_ka; ind++ )
-          kavec_fileout << setw(3) << kavec[ind] << endl; 
+	kavec_fileout << setw(3) << kavec[ind] << endl; 
       kavec_fileout.close();
    }
-   else cout << " open() kavec_fileout failed" << endl;
+   else
+     cout << " open() kavec_fileout failed" << endl;
+
    // Output kd vec
-   const char *kdvec_out = kdvec_out_path.c_str();
-   ofstream kdvec_fileout;
-   kdvec_fileout.open( kdvec_out, ios_base::binary|ios_base::app|ios_base::out );
+   ofstream kdvec_fileout( out_paths[6].c_str(), ios_base::binary|ios_base::app|ios_base::out );
    if (kdvec_fileout.is_open())
    {
-      for ( int ind = start_kd; ind < end_kd; ind++ )
-          kdvec_fileout << setw(3) << kdvec[ind] << endl; 
-      kdvec_fileout.close();
+     for ( int ind = start_kd; ind < end_kd; ind++ )
+       kdvec_fileout << setw(3) << kdvec[ind] << endl; 
+     kdvec_fileout.close();
    }
-   else cout << " open() kdvec_fileout failed" << endl;
+   else
+     cout << " open() kdvec_fileout failed" << endl;
+
    // Output ka val
-   const char *kaval_out = kaval_out_path.c_str();
-   ofstream kaval_fileout;
-   kaval_fileout.open( kaval_out, ios_base::binary|ios_base::app|ios_base::out );
+   ofstream kaval_fileout( out_paths[7].c_str(), ios_base::binary|ios_base::app|ios_base::out );
    if (kaval_fileout.is_open())
    {
       for ( int ind = start_ka; ind < end_ka; ind++ )
           kaval_fileout << setw(20) << setprecision(12) << kaval[ind] << endl; 
       kaval_fileout.close();
    }
-   else cout << " open() kaval_fileout failed" << endl;
+   else
+     cout << " open() kaval_fileout failed" << endl;
+
    // Output kd val
-   const char *kdval_out = kdval_out_path.c_str();
-   ofstream kdval_fileout;
-   kdval_fileout.open( kdval_out, ios_base::binary|ios_base::app|ios_base::out );
+   ofstream kdval_fileout( out_paths[8].c_str(), ios_base::binary|ios_base::app|ios_base::out );
    if (kdval_fileout.is_open())
    {
       for ( int ind = start_kd; ind < end_kd; ind++ )
           kdval_fileout << setw(20) << setprecision(12) << kdval[ind] << endl; 
       kdval_fileout.close();
    }
-   else cout << " open() kdval_fileout failed" << endl;
+   else
+     cout << " open() kdval_fileout failed" << endl;
+
 }
