@@ -14,11 +14,9 @@ int main(void)
    cout << "----Reading in data----" << endl; 	
    vector <double> t_d(N_time_points);
    vector <double> x_d(N_gene*N_time_points);
-   //vector <double> sd_d(N_gene*N_time_points);
    read_data (N_time_points, N_gene, t_d, x_d);
    cout << "----Setting up spline co-efficients----" << endl; 	
    vector <double> deriv_time(N_time_points*N_gene);
-   //cout << "  Setting up co-fficients of cubic spline" << endl;
    for ( int i = 0 ; i < N_gene ; i++ )
    {
        spline_deriv ( i, N_time_points, t_d, x_d, deriv_time);
@@ -27,29 +25,20 @@ int main(void)
    vector <double> cub_coeff_spline (N_gene*N_time_points*4);
    spline_coeff ( N_gene, N_time_points, t_d, x_d, deriv_time, cub_coeff_spline);
    // Determine mean, standard deviation, and correlation statistics
-   //vector <double> mean_xd, sd_xd, x_spline ;
    vector <double> mean_xd, sd_xd;
    for ( int ind = 0; ind < N_gene; ind++)
    { 
        //x_spline represented in terms of dt = 1. Used to determine mean, sd, and correlation
-       // N=10 case dt=1 for the data anyway so not necessary
+       // N=1000 case dt=1 for the data anyway so not necessary
        vector <double> x_spline_temp(N_time_points);
        copy( x_d.begin()+ind*N_time_points, x_d.begin()+(ind+1)*N_time_points, x_spline_temp.begin());
        //calc_spline( x_d, t_d, cub_coeff_spline, ind, x_spline_temp);
        calc_stats( x_spline_temp, mean_xd, sd_xd);
        vector<double>().swap(x_spline_temp);
-       //cout << "Value of mean is: " << mean_xd[ind] << endl;
-       //cout << "Value of sd is: " << sd_xd[ind] << endl;
-       //x_spline.insert(x_spline.end(),x_spline_temp.begin(),x_spline_temp.end());
    }
    cout << "----END spline setup----" << endl; 	
-   //vector <double> correlation;
-   //calc_corr(N_gene, x_d, mean_xd, sd_xd, correlation);
    //Error
    double E0 = 3.0E-03;
-   //Total simulation time
-   double sim_time = 0.0;
-   //const int N_tot = 20;
    for (int id_gene = 644; id_gene < 645; id_gene++)
    {
       const int gene_ind = id_gene;
@@ -163,25 +152,15 @@ int main(void)
          strcat(kdval_out_path,kdval_index_string);
       }
       string out_kdval(kdval_out_path);
+      // END DECLARATIONS 
       int acc_subnet = 0;
       int subnet_att = 0;
-      //int net_count = 0;
-      //vector <int> nka_vec_acc, nkd_vec_acc, kavec_acc, kdvec_acc;
-      //read_in_subnet ( gene_ind, nka_vec_acc, nkd_vec_acc, kavec_acc, kdvec_acc);
-      //const int N_trial_net = nka_vec_acc.size();
-      //boost::timer timer;
-      double proc_time = 0.0;
       cout << "------------ Start for gene " << gene_ind+1 << "  ------" << endl;
       while ( (acc_subnet < N_att) && (subnet_att<50) )
-      //for (int k = 0; k < N_tot; k++)
       {
          if (subnet_att <= 500) E0=5.0E-03;
          else E0=7.0E-03;
          cout << "------------ Attempt number " << subnet_att << "  ------" << endl;
-         //else if ((subnet_att>250) && (subnet_att<=750)) E0=5.0E-03;
-         //else if ((subnet_att>750) && (subnet_att<=1000)) E0=7.5E-03;
-         //else if (subnet_att>1000) E0=1.0E-02;
-         //else E0 = 1.0E-02;
          subnet_att++;
          int *n_ka = (int*)malloc(sizeof(int)*probSize);
          int *n_kd = (int*)malloc(sizeof(int)*probSize);
@@ -202,25 +181,6 @@ int main(void)
             // How to declare kavec_temp and kd_vec_temp
             vector <int> kavec_temp, kdvec_temp;
             vector <double> kaval_temp, kdval_temp;
-            //int conn_limit = 50 + int ((150*rand())/(RAND_MAX+1.0));
-            /*if (net_count < N_trial_net)
-            {
-                *(n_ka+ind) = nka_vec_acc[net_count];
-                *(n_kd+ind) = nkd_vec_acc[net_count];
-                temp_ka_vec.insert(temp_ka_vec.end(),kavec_acc.begin()+ka_ind,kavec_acc.begin()+ka_ind+nka_vec_acc[net_count]); 
-                temp_kd_vec.insert(temp_kd_vec.end(),kdvec_acc.begin()+kd_ind,kdvec_acc.begin()+kd_ind+nkd_vec_acc[net_count]);
-                for (int i = 0; i < nka_vec_acc[net_count]; i++)
-                    temp_ka_val.push_back(mean_xd[kavec_acc[ka_ind+i]]); 
-                for (int i = 0; i < nkd_vec_acc[net_count]; i++)
-                    temp_kd_val.push_back(mean_xd[kdvec_acc[kd_ind+i]]); 
-                *(ka_start+ind) = ka_ind;
-                *(kd_start+ind) = kd_ind;
-                ka_ind += nka_vec_acc[net_count];
-                kd_ind += nkd_vec_acc[net_count];
-                net_count++;
-            }
-            else 
-            {*/
             for (unsigned int k = 0; k < u_l(rng_gen); k++) 
                 random_conn(gene_ind, k+ind, mean_xd, n_ka_temp, n_kd_temp, kavec_temp, kdvec_temp, kaval_temp, kdval_temp);
             *(n_ka+ind) = n_ka_temp;
@@ -233,7 +193,6 @@ int main(void)
             temp_kd_vec.insert(temp_kd_vec.end(),kdvec_temp.begin(),kdvec_temp.end()); 
             temp_ka_val.insert(temp_ka_val.end(),kaval_temp.begin(),kaval_temp.end()); 
             temp_kd_val.insert(temp_kd_val.end(),kdval_temp.begin(),kdval_temp.end());
-            //}
             vector <int>().swap(kavec_temp);
             vector <int>().swap(kdvec_temp);
             vector <double>().swap(kaval_temp);
@@ -242,10 +201,7 @@ int main(void)
          //
          const int size_ka = temp_ka_vec.size();
          const int size_kd = temp_kd_vec.size();
-         //const int N_tot = 1;
          host_type error_sim_h;
-         //for (int N_itr = 0; N_itr < N_tot; N_itr++)
-         //{
          int *ka_vec = (int*)malloc(sizeof(int)*size_ka);
          double *ka_val = (double*)malloc(sizeof(double)*size_ka);
          int l = 0;
@@ -270,9 +226,6 @@ int main(void)
          srand(time(NULL));
          for ( int i = 0; i < probSize; i++)
          {
-               // *(r0+i) = pow(10.0,guassrand());
-               // *(d+i) = pow(10.0,guassrand());
-               // *(ea+i) = pow(10.0,guassrand());
                *(r0+i) = mean_xd[gene_ind];
                *(d+i) = 1.0;
                *(ea+i) = 1.0;
@@ -294,20 +247,12 @@ int main(void)
          int size_coeff = N_gene*N_time_points*4;
          fex.set_coeff(cub_coeff, size_coeff); 
          myJex jex;
-         //timer.restart();
          state_type error_sim_d(probSize);
-         // Integrating using LSODE
          // Integrate ODEs
-         //timer.restart();
          integrate_lsoda_ode (gene_ind, x_d, t_d, mean_xd[gene_ind], fex, jex, error_sim_d);
          // MC Simulation
-         //cout << "ODE END" << endl;
          MC_sim(gene_ind, x_d, t_d, mean_xd[gene_ind], n_ka, n_kd, size_ka, size_kd, fex, jex, error_sim_d);
-         //cout << "MC END" << endl;
          host_type ka_val_h(size_ka), kd_val_h(size_kd);
-         //thrust::host_vector<int> ka_vec_h, kd_vec_h;
-         //fex.get_kavec_vec(ka_vec_h,size_ka);
-         //cout << "Count Begin" << endl;
          host_type r0_mc(probSize), d_mc(probSize), ea_mc(probSize);
          thrust::device_ptr<double> r0_mc_d, d_mc_d, ea_mc_d;
          fex.get_r0_ptr(r0_mc_d);
@@ -317,18 +262,8 @@ int main(void)
          thrust::copy(ea_mc_d, ea_mc_d+probSize, ea_mc.begin()); 
          thrust::copy(d_mc_d, d_mc_d+probSize, d_mc.begin()); 
          fex.get_kaval_vec(ka_val_h,size_ka);
-         //fex.get_kdvec_vec(kd_vec_h,size_kd);
-         //cout << "Count Begin" << endl;
          fex.get_kdval_vec(kd_val_h,size_kd);
-         //proc_time = timer.elapsed()/(double(N_tot));
-         //proc_time += timer.elapsed();
-         //cout << "MC END" << endl;
          error_sim_h = error_sim_d;
-         //cout << "Count Begin" << endl;
-         //thrust::sort(error_sim_h.begin(),error_sim_h.end()); 
-         //cout << "Value of Simulation error is: " << error_sim_h[0] << endl;
-         //cout << "Value of Simulation error is: " << error_sim_h[1] << endl;
-         //cout << "Value of Simulation error is: " << error_sim_h[2] << endl;
          fex.set_r0_free();
          fex.set_d_free();
          fex.set_ea_free();
@@ -341,12 +276,9 @@ int main(void)
          fex.set_kd_vec_free();
          fex.set_kd_val_free();
          fex.set_coeff_free(); 
-         //proc_time = timer.elapsed();
-         //cout << "Count Begin" << endl;
          for ( int ind = 0; ind < probSize; ind++)
          {
              if ( error_sim_h[ind] < E0 ) 
-             //if ( (error_ode < E_0) && ((*(n_ka+ind)+*(n_kd_ind)>1) && (*(n_ka+ind)+*(n_kd+ind)<6)) )
              {
                     bool acc_sub = false; 
                     int act_count = 0;
@@ -359,7 +291,6 @@ int main(void)
                     double ea_ = ea_mc[ind];
                     double d_ = d_mc[ind];
                     output_data ( gene_ind, r0_, ea_, d_, out_r0, out_ea, out_d, start_ka, end_ka, start_kd, end_kd, temp_ka_vec, temp_kd_vec, ka_val_h, kd_val_h, out_nka, out_nkd, out_kavec, out_kdvec, out_kaval, out_kdval);
-                    //cout << "######" << " Value of error is: " << error_sim_h[ind] << "#######" << endl;
                     for ( int k = *(ka_start+ind); k < (*(ka_start+ind)+*(n_ka+ind)); k++) 
                     {
                        if ( ka_val_h[k] > 0.05 ) 
@@ -378,8 +309,6 @@ int main(void)
                           inh_count++;
                        }
                     }
-                    //act_vec.insert(act_vec.end(),temp_ka_vec.begin()+*(ka_start+ind),temp_ka_vec.begin()+*(ka_start+ind)+*(n_ka+ind)); 
-                    //inh_vec.insert(inh_vec.end(),temp_kd_vec.begin()+*(kd_start+ind),temp_kd_vec.begin()+*(kd_start+ind)+*(n_kd+ind)); 
                     if (acc_sub) 
                     {
                        acc_subnet++;
@@ -414,7 +343,6 @@ int main(void)
       sprintf(index_string, "%d", gene_ind+1);
       strcat(index_string,out_file);
       char out_path[96] = "../out/N1000/";
-      //char out_path[96] = "/scratch/raghut/GPU_g1g2/";
       strcat(out_path,index_string);
       ofstream fileout;
       fileout.open( out_path, ios_base::binary|ios_base::app|ios_base::out );
@@ -425,28 +353,21 @@ int main(void)
          for ( int ind_con = 0; ind_con < N_gene; ind_con++ )
          {
             int act_count = count(act_vec.begin(),act_vec.end(),ind_con);
-            //if (double(act_count) > double(0.20)*(double(acc_subnet))) 
             fileout << setw(3) << ind_con+1 << "   " << setw(3) << act_count << endl; 
          }
          fileout << "-------------- END FOR ACTIVATORS --------------" << endl;
          for ( int ind_con = 0; ind_con < N_gene; ind_con++ )
          {
             int inh_count = count(inh_vec.begin(),inh_vec.end(),ind_con); 
-            //if ( double(inh_count) > double(0.20)*(double(acc_subnet))) 
             fileout << setw(3) << ind_con+1 << "   " << setw(3) << inh_count << endl; 
-            //cout << "Number of times gene " << ind_con+1 << " appears as an inhibitor is: " << inh_count << endl; 
          }
          fileout << "------------ Size of subnetworks START----------- " << endl;
          for ( int ind_con = 0; ind_con < 20; ind_con++ )
          {
             int size_count = count(subnet_size.begin(),subnet_size.end(),ind_con); 
-            //if ( double(inh_count) > double(0.20)*(double(acc_subnet))) 
             fileout << setw(3) << ind_con << "   " << setw(3) << size_count << endl; 
-            //cout << "Number of times gene " << ind_con+1 << " appears as an inhibitor is: " << inh_count << endl; 
          }
          fileout << "------------ Size of subnetworks END----------- " << endl;
-         fileout << "------------ Time taken for simulation for gene " << gene_ind+1 <<
-          "  is: " << setw(18) << setprecision(8) << proc_time << " --------------" << endl;
          fileout << "------------ Number of acceptable subnetworks for gene " << gene_ind+1 <<
           " is: " << acc_subnet << " --------------" << endl;
          fileout << "------------ Number of attempts for gene " << gene_ind+1 <<
@@ -454,23 +375,11 @@ int main(void)
          fileout.close();
       }
       else cout << " open() failed" << endl;
-      sim_time = sim_time + proc_time;
       vector <double>().swap(act_vec);
       vector <double>().swap(inh_vec);
       vector <int>().swap(subnet_size);
-      cout << "------------ Time taken for simulation for gene " << gene_ind+1 <<
-          "  is: " << setw(18) << setprecision(8) << proc_time << " --------------" << endl;
       cout << "------------ End for gene " << gene_ind+1 << "  ------" << endl;
    }
-   //for ( int i = 0 ; i < error_sim_h.size(); i++)cout << "Value of Simulation error is: " << error_sim_h[i] << endl;
-   /*cout << "Value of Simulation error is: " << error_sim_h[1] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[2] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[3] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[1599] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[1598] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[1597] << endl;
-   cout << "Value of Simulation error is: " << error_sim_h[1596] << endl;*/
    //
-   //cout << "------------ Total Simulation time " << sim_time << "  ------" << endl;
    return 0;
 } /* MAIN */

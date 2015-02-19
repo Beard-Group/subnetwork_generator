@@ -11,9 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <cuda.h>
-//#include <boost/timer.hpp>
-//#include "./lsoda/cuLsoda_kernel.cu"
-// Thrust and Boost libraries
+// Thrust libraries
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include <thrust/device_ptr.h>
@@ -33,8 +31,6 @@ const int N_att = 10;
 const int threadsPerBlock = 16;
 const int blocksPerGrid = (probSize + threadsPerBlock -1)/threadsPerBlock;
 #endif
-//typedef float value_type;
 typedef double value_type;
 typedef thrust::device_vector < value_type > state_type;
-//typedef thrust::host_vector < value_type > state_type;
 typedef thrust::host_vector < value_type > host_type;

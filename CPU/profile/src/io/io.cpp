@@ -7,7 +7,7 @@ void read_data ( const int N_time_points, const int N_gene, vector<double> &t_d,
 {
    // Read in time steps t_d
    ifstream FileInpt_d;
-   char path1[100] = "../in/t_d_1000";
+   char path1[100] = "../in/t_dN10";
    FileInpt_d.open( path1, ios_base::in);
    if (FileInpt_d.is_open())
    {
@@ -24,7 +24,7 @@ void read_data ( const int N_time_points, const int N_gene, vector<double> &t_d,
         cout << "open() failed" << endl;
    // Read in time steps expression profile of all genes 
    ifstream FileInpx_dt;
-   char path2[100] = "../in/x_d_1000_N8_200_e1";
+   char path2[100] = "../in/x_dN10";
    FileInpx_dt.open( path2, ios_base::in);
    if (FileInpx_dt.is_open())
    {

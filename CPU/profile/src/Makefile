@@ -7,10 +7,8 @@
 
 #CUDA_ROOT = /usr/local/cuda-5.0
 #ARCH = sm_35
-HOME = /home/rthiagarajan
 #BOOST_ROOT = /usr/include/boost
 #THRUST_ROOT = /usr/local/cuda-5.0/include/thrust
-#BOOST_ROOT = $(HOME)/include/boost/boost
 SRC = .
 
 #GCC = gcc-4.6.3

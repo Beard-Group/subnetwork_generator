@@ -34,12 +34,12 @@ int main(void)
     }
     double E_0 = 5.0E-03;
     //const int alpha = 0.035;
-    boost::timer timer;
+    //boost::timer timer;
     double proc_time = 0.0;
     //double init_time = 0.0;
-    timer.restart();
+    //timer.restart();
     vector <double> act_vec, inh_vec;
-    for (int gene_ind = 644; gene_ind < 645; gene_ind++)
+    for (int gene_ind = 3; gene_ind < 4; gene_ind++)
     {
         cout << "--------START FOR GENE "<< gene_ind+1 << " -----------" << endl;
         //cout << " Values arranged as error, n_ka, gene ids for ka, n_kd, gene ids for kd," << endl;
@@ -333,7 +333,7 @@ int main(void)
               fex_nm.set_coeff(cub_coeff_spline);
               cout << "------------ Starting ODE solver -------------"  << endl;
               // ODE calculation
-              timer.restart();
+              //timer.restart();
               double error_ode = 0.0;
               bool out_val = true; 
               integrate_lsoda_ode ( x_d, t_d, mean_xd, fex_nm, jex_nm, gene_ind, out_val, error_ode );
