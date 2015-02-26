@@ -27,7 +27,7 @@
 const int N_gene = 1000;
 const int N_time_points = 12;
 const int probSize =  1600;
-const int N_att = 10;
+const int N_att = 5;
 const int threadsPerBlock = 16;
 const int blocksPerGrid = (probSize + threadsPerBlock -1)/threadsPerBlock;
 #endif
