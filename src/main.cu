@@ -41,8 +41,8 @@ int main(void)
             setup_output(gene_ind, out_files);
         }
         // END DECLARATIONS
-        int acc_subnet = 0;
-        int subnet_att = 0;
+        int acc_subnet = 0; // count of accepted subnetworks
+        int subnet_att = 0; // attempts
         cout << "------------ Start for gene " << gene_ind+1 << "  ------" << endl;
         while ( (acc_subnet < N_att) && (subnet_att<50) ) {
             if (subnet_att <= 500) E0=5.0E-03;

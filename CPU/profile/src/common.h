@@ -17,9 +17,9 @@
 #include <random>
 #ifndef COMM_H
 #define COMM_H
-const int N_gene = 10;
+const int N_gene = 1000;
 const int N_time_points = 12;
-const int probSize = 3;
+const int probSize = 3; // Generate profiles for probSize number of subnetworks
 #endif
 typedef double value_type;
 typedef std::vector < value_type > state_type;
