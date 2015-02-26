@@ -8,8 +8,13 @@
 #include <sstream>
 using namespace std;
 
+// Global constants, single point of maintenance
+const char * const output_path_c = "../out/N1000/";
+
 void setup_spline(vector<double>& t_d_in, vector<double> x_d_in,
                   vector<double>& cub_coeff_spline_out, vector<double>& mean_xd_out);
+
+void setup_output(int gene_ind_n, vector<string>& out_files_out);
 
 int main(void)
 {
@@ -28,23 +33,12 @@ int main(void)
         const int gene_ind = id_gene;
         vector <double> act_vec, inh_vec;
         vector <int> subnet_size;
-        string output_path("../out/N1000/");
-        bool created_paths = false;
+        // Set up output file paths for this gene
+        bool created_paths = false; // Why do we need this check? Paths only created once per gene index anyway.
         vector<string> out_files;
         if (!created_paths) {
             created_paths = true;
-            stringstream ss;
-            ss << (gene_ind + 1);
-            string file_prefix = output_path + ss.str();
-            out_files.push_back(file_prefix + ".r0");
-            out_files.push_back(file_prefix + ".ea");
-            out_files.push_back(file_prefix + ".d");
-            out_files.push_back(file_prefix + ".nka");
-            out_files.push_back(file_prefix + ".nkd");
-            out_files.push_back(file_prefix + ".kavec");
-            out_files.push_back(file_prefix + ".kdvec");
-            out_files.push_back(file_prefix + ".kaval");
-            out_files.push_back(file_prefix + ".kdval");
+            setup_output(gene_ind, out_files);
         }
         // END DECLARATIONS
         int acc_subnet = 0;
@@ -303,6 +297,22 @@ void setup_spline(vector<double>& t_d_in, vector<double> x_d_in,
         vector<double>().swap(x_spline_temp); // Why?
     }
     cout << "----END spline setup----" << endl;
+}
+
+void setup_output(int gene_ind_in, vector<string>& out_files_out) {
+    stringstream ss;
+    ss << (gene_ind_in + 1);
+    string file_prefix(output_path_c);
+    file_prefix += ss.str();
+    out_files_out.push_back(file_prefix + ".r0");
+    out_files_out.push_back(file_prefix + ".ea");
+    out_files_out.push_back(file_prefix + ".d");
+    out_files_out.push_back(file_prefix + ".nka");
+    out_files_out.push_back(file_prefix + ".nkd");
+    out_files_out.push_back(file_prefix + ".kavec");
+    out_files_out.push_back(file_prefix + ".kdvec");
+    out_files_out.push_back(file_prefix + ".kaval");
+    out_files_out.push_back(file_prefix + ".kdval");
 }
 
 // Error bound
