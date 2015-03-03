@@ -7,6 +7,8 @@
 
 using namespace std;
 //
+const char * const in_file_path_c = "../in/";
+
 int main(void)    
 {
     //cout << "----Reading in data----" << endl; 	
@@ -50,82 +52,23 @@ int main(void)
         //mt19937 mt_s;
         //mt_s.seed(time(NULL));
         //std::uniform_int_distribution<> dist_in(50,200);
-        char in_r0_file[32] = ".r0";
-        char in_ea_file[32] = ".ea";
-        char in_d_file[32] = ".d";
-        char in_ka_file[32] = ".nka";
-        char in_kd_file[32] = ".nkd";
-        char in_kavec_file[32] = ".kavec";
-        char in_kdvec_file[32] = ".kdvec";
-        char in_kaval_file[32] = ".kaval";
-        char in_kdval_file[32] = ".kdval";
-        char index_string_r0[32];
-        char index_string_ea[32];
-        char index_string_d[32];
-        char index_string_ka[32];
-        char index_string_kd[32];
-        char index_string_kavec[32];
-        char index_string_kdvec[32];
-        char index_string_kaval[32];
-        char index_string_kdval[32];
-        char in_r0_path[64];
-        char in_ea_path[64];
-        char in_d_path[64];
-        char in_ka_path[64];
-        char in_kd_path[64];
-        char in_kavec_path[64];
-        char in_kdvec_path[64];
-        char in_kaval_path[64];
-        char in_kdval_path[64];
-        sprintf(index_string_r0, "%d", gene_ind+1);
-        sprintf(index_string_ea, "%d", gene_ind+1);
-        sprintf(index_string_d, "%d", gene_ind+1);
-        sprintf(index_string_ka, "%d", gene_ind+1);
-        sprintf(index_string_kd, "%d", gene_ind+1);
-        sprintf(index_string_kavec, "%d", gene_ind+1);
-        sprintf(index_string_kdvec, "%d", gene_ind+1);
-        sprintf(index_string_kaval, "%d", gene_ind+1);
-        sprintf(index_string_kdval, "%d", gene_ind+1);
-        strcat(index_string_r0,in_r0_file);
-        strcat(index_string_ea,in_ea_file);
-        strcat(index_string_d,in_d_file);
-        strcat(index_string_ka,in_ka_file);
-        strcat(index_string_kd,in_kd_file);
-        strcat(index_string_kavec,in_kavec_file);
-        strcat(index_string_kdvec,in_kdvec_file);
-        strcat(index_string_kaval,in_kaval_file);
-        strcat(index_string_kdval,in_kdval_file);
-        char file_path_r0[32] = "../in/";
-        char file_path_ea[32] = "../in/";
-        char file_path_d[32] = "../in/";
-        char file_path_ka[32] = "../in/";
-        char file_path_kd[32] = "../in/";
-        char file_path_kavec[32] = "../in/";
-        char file_path_kdvec[32] = "../in/";
-        char file_path_kaval[32] = "../in/";
-        char file_path_kdval[32] = "../in/";
-        strcat(file_path_r0,index_string_r0);
-        strcat(file_path_ea,index_string_ea);
-        strcat(file_path_d,index_string_d);
-        strcat(file_path_ka,index_string_ka);
-        strcat(file_path_kd,index_string_kd);
-        strcat(file_path_kavec,index_string_kavec);
-        strcat(file_path_kdvec,index_string_kdvec);
-        strcat(file_path_kaval,index_string_kaval);
-        strcat(file_path_kdval,index_string_kdval);
-        strncpy(in_r0_path,file_path_r0,sizeof(file_path_r0));
-        strncpy(in_ea_path,file_path_ea,sizeof(file_path_ea));
-        strncpy(in_d_path,file_path_d,sizeof(file_path_d));
-        strncpy(in_ka_path,file_path_ka,sizeof(file_path_ka));
-        strncpy(in_kd_path,file_path_kd,sizeof(file_path_kd));
-        strncpy(in_kavec_path,file_path_kavec,sizeof(file_path_kavec));
-        strncpy(in_kdvec_path,file_path_kdvec,sizeof(file_path_kdvec));
-        strncpy(in_kaval_path,file_path_kaval,sizeof(file_path_kaval));
-        strncpy(in_kdval_path,file_path_kdval,sizeof(file_path_kdval));
+        stringstream ss;
+        ss << gene_ind + 1;
+        string in_r0_file = in_file_path_c + ss.str() + ".r0";
+        string in_ea_file = in_file_path_c + ss.str() + ".ea";
+        string in_d_file = in_file_path_c + ss.str() + ".d";
+        string in_ka_file = in_file_path_c + ss.str() + ".nka";
+        string in_kd_file = in_file_path_c + ss.str() + ".nkd";
+        string in_kavec_file = in_file_path_c + ss.str() + ".kavec";
+        string in_kdvec_file = in_file_path_c + ss.str() + ".kdvec";
+        string in_kaval_file = in_file_path_c + ss.str() + ".kaval";
+        string in_kdval_file = in_file_path_c + ss.str() + ".kdval";
+        ss.clear();
+
         vector <int> nka_vec, nkd_vec, kavec, kdvec;
         vector <double> r0_, ea_, d_, kaval, kdval;
         ifstream file_in_r0;
-        file_in_r0.open( in_r0_path, ios_base::in );
+        file_in_r0.open( in_r0_file.c_str(), ios_base::in );
         if (file_in_r0.is_open())
         {
            double a;
@@ -140,7 +83,7 @@ int main(void)
         }
         else cout << " open() failed" << endl;
         ifstream file_in_ea;
-        file_in_ea.open( in_ea_path, ios_base::in );
+        file_in_ea.open( in_ea_file.c_str(), ios_base::in );
         if (file_in_ea.is_open())
         {
            double a;
@@ -155,7 +98,7 @@ int main(void)
         }
         else cout << " open() failed" << endl;
         ifstream file_in_d;
-        file_in_d.open( in_d_path, ios_base::in );
+        file_in_d.open( in_d_file.c_str(), ios_base::in );
         if (file_in_d.is_open())
         {
            double a;
@@ -170,7 +113,7 @@ int main(void)
         }
         else cout << " open() failed" << endl;
         ifstream file_in_ka;
-        file_in_ka.open( in_ka_path, ios_base::in );
+        file_in_ka.open( in_ka_file.c_str(), ios_base::in );
         if (file_in_ka.is_open())
         {
            int a;
@@ -185,7 +128,7 @@ int main(void)
         }
         else cout << " open() failed" << endl;
         ifstream file_in_kd;
-        file_in_kd.open( in_kd_path, ios_base::in );
+        file_in_kd.open( in_kd_file.c_str(), ios_base::in );
         if (file_in_kd.is_open())
         {
            int a;
@@ -205,7 +148,7 @@ int main(void)
         const int N_subnets = nka_vec.size();
         cout << "Number of subnets found is: " << N_subnets << endl;
         ifstream file_in_kavec;
-        file_in_kavec.open( in_kavec_path, ios_base::in );
+        file_in_kavec.open( in_kavec_file.c_str(), ios_base::in );
         if (file_in_kavec.is_open())
         {
            int a;
@@ -222,7 +165,7 @@ int main(void)
         else cout << " open() failed" << endl;
         //cout << "Size of kavec is: " << kavec.size() << endl;
         ifstream file_in_kdvec;
-        file_in_kdvec.open( in_kdvec_path, ios_base::in );
+        file_in_kdvec.open( in_kdvec_file.c_str(), ios_base::in );
         if (file_in_kdvec.is_open())
         {
            int a;
@@ -239,7 +182,7 @@ int main(void)
         else cout << " open() failed" << endl;
         //cout << "Size of kdvec is: " << kdvec.size() << endl;
         ifstream file_in_kaval;
-        file_in_kaval.open( in_kaval_path, ios_base::in );
+        file_in_kaval.open( in_kaval_file.c_str(), ios_base::in );
         if (file_in_kaval.is_open())
         {
            double a;
@@ -256,7 +199,7 @@ int main(void)
         else cout << " open() failed" << endl;
         //cout << "Size of kaval is: " << kaval.size() << endl;
         ifstream file_in_kdval;
-        file_in_kdval.open( in_kdval_path, ios_base::in );
+        file_in_kdval.open( in_kdval_file.c_str(), ios_base::in );
         if (file_in_kdval.is_open())
         {
            double a;

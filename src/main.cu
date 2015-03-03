@@ -9,7 +9,7 @@
 using namespace std;
 
 // Global constants, single point of maintenance
-const char * const output_path_c = "../out/N1000/";
+const char * const output_path_c = "../out/N1000_test/";
 
 void setup_spline(vector<double>& t_d_in, vector<double> x_d_in,
                   vector<double>& cub_coeff_spline_out, vector<double>& mean_xd_out);
@@ -231,14 +231,19 @@ int main(void)
             free(ka_val);
             free(kd_val);
         }
-        char out_file[32] = ".out";
-        char index_string[64];
-        sprintf(index_string, "%d", gene_ind+1);
-        strcat(index_string,out_file);
-        char out_path[96] = "../out/N1000/";
-        strcat(out_path,index_string);
+        stringstream ss;
+        ss << (gene_ind + 1);
+        string outfile(output_path_c);
+        outfile += ss.str();
+        outfile += ".out";
+//        char out_file[32] = ".out";
+//        char index_string[64];
+//        sprintf(index_string, "%d", gene_ind+1);
+//        strcat(index_string,out_file);
+//        char out_path[96] = "../out/N1000/";
+//        strcat(out_path,index_string);
         ofstream fileout;
-        fileout.open( out_path, ios_base::binary|ios_base::app|ios_base::out );
+        fileout.open( outfile.c_str(), ios_base::binary|ios_base::app|ios_base::out );
         if (fileout.is_open()) {
             cout << "File open successful!" << endl;
             fileout << "------------ START FOR ACTIVATORS --------------" << endl;
