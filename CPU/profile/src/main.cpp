@@ -7,7 +7,7 @@
 
 using namespace std;
 //
-const char * const in_file_path_c = "../in/";
+const char * const in_file_path_c = "../../../out/N1000/";
 
 int main(void)    
 {
