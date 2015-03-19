@@ -3,7 +3,7 @@
 # include "../common.h"
 # include "../lsoda/cuLsoda.hpp"
 double guassrand(); 
-void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const state_type &mean_xd, const myFex_single &fex, const myJex_single &jex, const int &gene_index,const bool out_val, double &error);
+void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const state_type &mean_xd, const myFex_single &fex, const myJex_single &jex, const int &gene_index,const bool out_val, double &error, ofstream& outfile);
 /*struct move_functor
 {
    value_type operator()(const value_type &param)

@@ -4,7 +4,7 @@
 #include "./lsoda/cuLsoda.hpp"
 #include "./optimization/opt.hpp"
 #include "./subnetsearch/search.hpp"
-
+#include <sstream>
 using namespace std;
 //
 const char * const in_file_path_c = "../../../out/N1000/";
@@ -147,6 +147,8 @@ int main(void)
         else  cout << "Copied nka and nkd files perfectly" << endl;
         const int N_subnets = nka_vec.size();
         cout << "Number of subnets found is: " << N_subnets << endl;
+
+
         ifstream file_in_kavec;
         file_in_kavec.open( in_kavec_file.c_str(), ios_base::in );
         if (file_in_kavec.is_open())
@@ -225,6 +227,13 @@ int main(void)
         //
         
         int acc_subnet = 0;
+
+        // save number of subnets we will print (This value may be less
+        // than N_subnets, because it can be limited by probSize in common.h)
+        ofstream subnet_out_file("n_subnets.out");
+        subnet_out_file << min(probSize, N_subnets) << endl;
+        subnet_out_file.close();
+
         //for (unsigned int k = 0; k < dist_in(mt_s); k++) 
         //    random_select(gene_ind, k+subnet_attempts, mean_xd, n_ka_temp, n_kd_temp, kavec_temp, kdvec_temp, kaval_temp, kdval_temp);
         //subnet_attempts++;
@@ -233,6 +242,8 @@ int main(void)
         {
            int counter_ka = 0;
            int counter_kd = 0;
+
+           int outfile_count = 1;
            for ( int ind = 0; ind < probSize; ind++)
            {
               int n_ka_temp = 0;
@@ -279,7 +290,14 @@ int main(void)
               //timer.restart();
               double error_ode = 0.0;
               bool out_val = true; 
-              integrate_lsoda_ode ( x_d, t_d, mean_xd, fex_nm, jex_nm, gene_ind, out_val, error_ode );
+
+              stringstream ss;
+              ss << "../out/N1000/run" << outfile_count << ".out";
+              ofstream outfile(ss.str().c_str());
+              outfile_count++;
+
+              integrate_lsoda_ode ( x_d, t_d, mean_xd, fex_nm, jex_nm, gene_ind, out_val, error_ode, outfile );
+              outfile.close();
               cout << "Value of error for the first run of ODE is: " << error_ode << endl;
               acc_subnet++; 
 	      fex_nm.clear_mem();

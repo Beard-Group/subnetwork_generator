@@ -36,7 +36,7 @@ double guassrand()
       return X;
 }
 // LSODE integrator function
-void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const state_type &mean_xd, const myFex_single &fex, const myJex_single &jex, const int &gene_index, const bool out_val, double &error)
+void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const state_type &mean_xd, const myFex_single &fex, const myJex_single &jex, const int &gene_index, const bool out_val, double &error, ofstream& outfile)
 {
     error = 0.0;
     // Local variables 
@@ -82,6 +82,8 @@ void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const s
     {
        cout << setw(16) << setprecision(8) << double(0.0) << "   "; 
        cout << setw(16) << setprecision(8) << double(1.0) << endl; 
+       outfile << setw(16) << setprecision(8) << double(0.0) << "   "; 
+       outfile << setw(16) << setprecision(8) << double(1.0) << endl; 
     }
     for ( int t_ind = 1; t_ind < N_time_points; t_ind++) 
     {
@@ -98,6 +100,8 @@ void integrate_lsoda_ode ( const state_type &x_d, const state_type &t_d, const s
         {
            cout << setw(16) << setprecision(8) << *tout << "   "; 
            cout << setw(16) << setprecision(8) << y[0] << endl; 
+           outfile << setw(16) << setprecision(8) << *tout << "   "; 
+           outfile << setw(16) << setprecision(8) << y[0] << endl; 
         }
     }
     free(t);
