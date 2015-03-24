@@ -22,6 +22,8 @@
 #define CULSODA_ALL
 #include "../common.h"
 
+#include <thrust/device_vector.h>
+
 /* Common Block Declarations */
 struct cuLsodaCommonBlock
 {

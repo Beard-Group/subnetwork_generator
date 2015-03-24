@@ -20,6 +20,8 @@
 #define CULSODA_FEX_H
 #include "../common.h"
 
+#include <thrust/device_vector.h>
+
 using namespace std;
 
 #define Fex_and_Jex_definition
@@ -27,10 +29,23 @@ using namespace std;
 struct myFex
 {
         private:
+
         double *_Dcoeff,*r0_ptr, *d_ptr, *ea_ptr, *_Dkaval, *_Dkdval;
         int *_Dnka, *_Dkavec, *_Dkastart, *_Dnkd, *_Dkdvec, *_Dkdstart;
         double t_t, num, den;
+//    thrust::device_vector<double> t_d;
+    double* t_d_array;
+    int t_d_size;
         public:
+    void set_t_d(const double * t_d_in, int t_d_size_in) {
+        size_t size = sizeof(double) * t_d_size_in;
+        cudaMalloc((void**)&t_d_array, size);
+        cudaMemcpy(t_d_array, t_d_in, size, cudaMemcpyHostToDevice);
+        t_d_size = t_d_size_in;
+    }
+    void set_t_d_free() {
+        cudaFree(t_d_array);
+    }
         void set_r0 ( const double *r0 ) 
         {
 	     cudaMalloc((void**)&r0_ptr,sizeof(double)*probSize);
@@ -230,14 +245,81 @@ struct myFex
         double get_co2 (int i, int j) const {return _Dcoeff[i*N_time_points*4+j*4+2];};
         HOST DEVICE
         double get_co3 (int i, int j) const {return _Dcoeff[i*N_time_points*4+j*4+3];};
+
+    __device__ int t_d_lower_bound(double t_in) {
+        int low, high, mid;
+        low = 0;
+        high = t_d_size - 1;
+        while(low <= high) {
+            mid = (low + high) / 2;
+            if (t_in < t_d_array[mid]) {
+                high = mid - 1;
+            } else if (t_in > t_d_array[mid]) {
+                low = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return high;
+    }
+    
 	__device__ void operator()(int *neq, double *t, double *y, double *ydot)
 	{
+
+
+
              t_t = 0.0;
 	     int thread_id = threadIdx.x + blockIdx.x * blockDim.x;
              int ka_index = 0;
              int kd_index = 0;
              num = 0.0;
              den = 0.0; 
+             
+             if ( *t - 1.0 <= 0.0 )
+             {
+                while ( ka_index < _Dnka[thread_id] )
+                { 
+                       num += (get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],0) * _Dkaval[_Dkastart[thread_id]+ka_index]);
+                       ka_index++;
+                }
+                num *= num*num*num;
+                num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
+                while ( kd_index < _Dnkd[thread_id] )
+                { 
+                       den += (get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],0) * _Dkdval[_Dkdstart[thread_id]+kd_index]);
+                       kd_index++;
+                }
+                den *= den*den*den; 
+                den += (num + 1.0);
+                ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
+	     }
+             else {
+                 int lower_index = t_d_lower_bound(*t);
+                 t_t = *t - 1.0;
+                while ( ka_index < _Dnka[thread_id] )
+                { 
+                       num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index) + 
+                              (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index)+
+                              ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index)*(t_t)))))
+                              *_Dkaval[_Dkastart[thread_id]+ka_index]); 
+                       ka_index++;
+                }
+                num *= num*num*num;
+                num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
+                while ( kd_index < _Dnkd[thread_id] )
+                { 
+                       den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],lower_index) + 
+                              (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],lower_index)+
+                              ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],lower_index)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],lower_index)*(t_t)))))
+                              *_Dkdval[_Dkdstart[thread_id]+kd_index]); 
+                       kd_index++;
+                }
+                den *= den*den*den; 
+                den += (num + 1.0);
+                ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
+             }
+             
+             /*
              if ( *t - 1.0 <= 0.0 )
              {
                 while ( ka_index < _Dnka[thread_id] )
@@ -555,7 +637,7 @@ struct myFex
                 den *= den*den*den; 
                 den += (num + 1.0);
                 ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-             }
+                }*/
              /*else if (*t-1.0 > double(60/3))
              {
                 t_t = *t - 1.0 - double(60/3);

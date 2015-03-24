@@ -122,6 +122,12 @@ int main(void)
             for ( int i = 0; i < cub_coeff_spline.size();
                     i++) cub_coeff[i] = cub_coeff_spline[i];
             myFex fex; // ./lsoda/cuLSODA.hpp
+            double* tmp_t_d = new double[N_time_points];
+            for (int i = 0; i < N_time_points; ++i) {
+                tmp_t_d[i] = t_d[i];
+            }
+            fex.set_t_d(tmp_t_d, N_time_points);
+            delete[] tmp_t_d;
             fex.set_r0(r0);
             fex.set_d(d);
             fex.set_ea(ea);
@@ -156,6 +162,7 @@ int main(void)
             fex.get_kaval_vec(ka_val_h,size_ka);
             fex.get_kdval_vec(kd_val_h,size_kd);
             error_sim_h = error_sim_d;
+            fex.set_t_d_free();
             fex.set_r0_free();
             fex.set_d_free();
             fex.set_ea_free();
