@@ -34,7 +34,8 @@ int main(void)
         vector <double> act_vec, inh_vec;
         vector <int> subnet_size;
         // Set up output file paths for this gene
-        bool created_paths = false; // Why do we need this check? Paths only created once per gene index anyway.
+        bool created_paths =
+            false; // Why do we need this check? Paths only created once per gene index anyway.
         vector<string> out_files;
         if (!created_paths) {
             created_paths = true;
@@ -311,7 +312,8 @@ void setup_spline(vector<double>& t_d_in, vector<double> x_d_in,
     cout << "----END spline setup----" << endl;
 }
 
-void setup_output(int gene_ind_in, vector<string>& out_files_out) {
+void setup_output(int gene_ind_in, vector<string>& out_files_out)
+{
     stringstream ss;
     ss << (gene_ind_in + 1);
     string file_prefix(output_path_c);
