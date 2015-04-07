@@ -32,7 +32,6 @@ private:
     double *_Dcoeff,*r0_ptr, *d_ptr, *ea_ptr, *_Dkaval, *_Dkdval;
     int *_Dnka, *_Dkavec, *_Dkastart, *_Dnkd, *_Dkdvec, *_Dkdstart;
     double t_t, num, den;
-//    thrust::device_vector<double> t_d;
     double* t_d_array;
     int t_d_size;
 public:
@@ -56,11 +55,7 @@ public:
     {
         r0ptr = thrust::device_pointer_cast(r0_ptr);
     };
-    /*void set_r0_ptr ( thrust::device_ptr<double> &r0_opt )
-    {
-         thrust::device_ptr<double> r0ptr = thrust::device_pointer_cast(r0_ptr);
-         thrust::copy(r0_opt,r0_opt+probSize,r0ptr);
-    };*/
+
     void set_r0_free ()
     {
         cudaFree(r0_ptr);
@@ -74,21 +69,12 @@ public:
     {
         dptr = thrust::device_pointer_cast(d_ptr);
     };
-    /*void set_d_ptr ( thrust::device_ptr<double> &d_opt )
-    {
-         thrust::device_ptr<double> dptr = thrust::device_pointer_cast(d_ptr);
-         thrust::copy(d_opt,d_opt+probSize,dptr);
-    };*/
+
     void set_d_free ()
     {
         cudaFree(d_ptr);
     };
-    /*void set_d_array ( const double d[] )
-    {
-     cudaMalloc((void**)&d_ptr,sizeof(double)*probSize);
-     cudaMemcpy(d_ptr,d,sizeof(double)*probSize,cudaMemcpyHostToDevice);
-    };
-    void set_d_free () { cudaFree(d_ptr); };*/
+
     void set_ea ( const double *ea )
     {
         cudaMalloc((void**)&ea_ptr,sizeof(double)*probSize);
@@ -343,7 +329,7 @@ public:
             ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
         } else {
             int lower_index = t_d_lower_bound(*t);
-            t_t = *t - 1.0;
+            t_t = *t - 1.0 - t_d_array[lower_index];
             while ( ka_index < _Dnka[thread_id] ) {
                 num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index) +
                          (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],lower_index)+
@@ -369,350 +355,6 @@ public:
             ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
         }
 
-        /*
-        if ( *t - 1.0 <= 0.0 )
-        {
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += (get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],0) * _Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += (get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],0) * _Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 0.0) && (*t-1.0 <= 1.0) )
-        {
-           t_t = *t - 1.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],1) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],1)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],1)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],1)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],1) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],1)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],1)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],1)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 1.0) && (*t-1.0 <= 2.0) )
-        {
-           t_t = *t - 1.0 - 1.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],2) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],2)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],2)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],2)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],2) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],2)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],2)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],2)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 2.0) && (*t-1.0 <= 3.0) )
-        {
-           t_t = *t - 1.0 - 2.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],3) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],3)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],3)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],3)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],3) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],3)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],3)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],3)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 3.0) && (*t-1.0 <= 4.0) )
-        {
-           t_t = *t - 1.0 - 3.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],4) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],4)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],4)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],4)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],4) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],4)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],4)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],4)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 4.0) && (*t-1.0 <= 5.0) )
-        {
-           t_t = *t - 1.0 - 4.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],5) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],5)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],5)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],5)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],5) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],5)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],5)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],5)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 5.0) && (*t-1.0 <= 6.0) )
-        {
-           t_t = *t - 1.0 - 5.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],6) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],6)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],6)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],6)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],6) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],6)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],6)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],6)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 6.0) && (*t-1.0 <= 7.0) )
-        {
-           t_t = *t - 1.0 - 6.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],7) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],7)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],7)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],7)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],7) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],7)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],7)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],7)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 7.0) && (*t-1.0 <= 8.0) )
-        {
-           t_t = *t - 1.0 - 7.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],8) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],8)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],8)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],8)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],8) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],8)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],8)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],8)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 8.0) && (*t-1.0 <= 9.0) )
-        {
-           t_t = *t - 1.0 - 8.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],9) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],9)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],9)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],9)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],9) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],9)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],9)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],9)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 9.0) && (*t-1.0 <= 10.0) )
-        {
-           t_t = *t - 1.0 - 9.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],10) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],10)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],10)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],10)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],10) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],10)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],10)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],10)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if ( (*t-1.0 > 10.0) && (*t-1.0 <= 11.0) )
-        {
-           t_t = *t - 1.0 - 10.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],11) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],11)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],11)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],11)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],11) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],11)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],11)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],11)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }
-        else if (*t-1.0 > 11.0)
-        {
-           t_t = *t - 1.0 - 11.0;
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],12) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],12)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],12)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],12)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],12) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],12)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],12)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],12)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-           }*/
-        /*else if (*t-1.0 > double(60/3))
-        {
-           t_t = *t - 1.0 - double(60/3);
-           while ( ka_index < _Dnka[thread_id] )
-           {
-                  num += ((get_co0(_Dkavec[_Dkastart[thread_id]+ka_index],13) +
-                         (t_t)*(get_co1(_Dkavec[_Dkastart[thread_id]+ka_index],13)+
-                         ((t_t)*(get_co2(_Dkavec[_Dkastart[thread_id]+ka_index],13)+get_co3(_Dkavec[_Dkastart[thread_id]+ka_index],13)*(t_t)))))
-                         *_Dkaval[_Dkastart[thread_id]+ka_index]);
-                  ka_index++;
-           }
-           num *= num*num*num;
-           num += ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id]*ea_ptr[thread_id];
-           while ( kd_index < _Dnkd[thread_id] )
-           {
-                  den += ((get_co0(_Dkdvec[_Dkdstart[thread_id]+kd_index],13) +
-                         (t_t)*(get_co1(_Dkdvec[_Dkdstart[thread_id]+kd_index],13)+
-                         ((t_t)*(get_co2(_Dkdvec[_Dkdstart[thread_id]+kd_index],13)+get_co3(_Dkdvec[_Dkdstart[thread_id]+kd_index],13)*(t_t)))))
-                         *_Dkdval[_Dkdstart[thread_id]+kd_index]);
-                  kd_index++;
-           }
-           den *= den*den*den;
-           den += (num + 1.0);
-           ydot[0] = r0_ptr[thread_id]*(num/den)-d_ptr[thread_id]*y[0];
-        }*/
     }
 };
 
