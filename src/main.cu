@@ -9,7 +9,7 @@
 using namespace std;
 
 // Global constants, single point of maintenance
-const char * const output_path_c = "../out/N1000_test/";
+const char * const output_path_c = "../out/N1000/";
 
 void setup_spline(vector<double>& t_d_in, vector<double> x_d_in,
                   vector<double>& cub_coeff_spline_out, vector<double>& mean_xd_out);
