@@ -5,7 +5,7 @@ Clone the repository in a new directory
 
       git clone git@github.com:AmirAlavi/subnetwork_generator.git subnet_gen
       
-Build the program by navigating to subnet_gen/src/ and invoking make
+Build the program by navigating to subnet_generator/src/ and invoking make
 
       make
       
