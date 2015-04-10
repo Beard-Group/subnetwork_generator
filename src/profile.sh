@@ -1,5 +1,6 @@
 #!/bin/bash
-NUM_PLOTS_REQUESTED=$1
+DEFAULT_NUM_PLOTS=3
+NUM_PLOTS_REQUESTED=${1:-$DEFAULT_NUM_PLOTS}
 
 ./run_N1000_gene645
 cd ../CPU/profile/src/
