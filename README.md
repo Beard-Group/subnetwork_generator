@@ -16,7 +16,7 @@ profiles to plot by giving a numerical argument to profile.sh on the command lin
 The default is 3.
 For example:
 
-      ./profile.sh 3
+      ./profile.sh 4
     
 
 You may need to modify paths in the Makefile to be able to compile the program.
