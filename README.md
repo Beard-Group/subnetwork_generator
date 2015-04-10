@@ -9,8 +9,11 @@ Build the program by navigating to subnet_generator/src/ and invoking make
 
       make
       
-Run the program by running the automatic test script, "profile.sh". Be sure to 
-include a numerical argument, indicating the number of data sets to be plotted.
+Run the program by running the automatic test script, "profile.sh".
+This script is set up to run the program, and plots the predicted time course
+profiles along with the actual data. You can tell the program how many time 
+profiles to plot by giving a numerical argument to profile.sh on the command line.
+The default is 3.
 For example:
 
       ./profile.sh 3
