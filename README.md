@@ -3,7 +3,7 @@ Beard Lab Subnetwork Generator Program, February 2015
 
 Clone the repository in a new directory
 
-      git clone git@github.com:AmirAlavi/subnetwork_generator.git subnet_gen
+      git clone git@github.com:AmirAlavi/subnetwork_generator.git
       
 Build the program by navigating to subnet_generator/src/ and invoking make
 
