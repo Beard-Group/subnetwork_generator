@@ -33,4 +33,4 @@ Inputs are read through src/io/* files. The input files being (for number of gen
 6. kavec: index of gene which acts as an inhibitor. Index starts at 0 for the sample input files.Size is sum of all elements of n_kd vector.
 7. kaval: Value of activating effect for the corresponding element in kavec. Size is sum of all elements of n_ka vector.
 8. kdval: Value of inhibiting effect for the corresponding element in kdvec. Size is sum of all elements of n_kd vector.
-########################################################################################
+-----------------------------------------------------------------------------------------------
