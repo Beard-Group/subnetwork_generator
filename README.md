@@ -22,8 +22,8 @@ For example:
 You may need to modify paths in the Makefile to be able to compile the program.
 
 
-########################################################################################
-Inputs are read through src/io/* files. The input files being for number of genes N_gene
+---------------------------------------------------------------------------------------------
+Inputs are read through src/io/* files. The input files being (for number of genes N_gene):
 
 1. t_d: time points where data is available
 2. x_d: value of expression at these timepoints. It has N_gene rows and size(t_d) columns.
